@@ -410,7 +410,14 @@ function M.request.parse_multipart(self)
         local j
         while true do
             j = body:find('&', i)
-            if j == nil then break end
+            if j == nil then
+                local part = body:sub(i)
+                local k, v = part:match('^(.+)=(.+)$')
+                if k then
+                    result[k] = v
+                end
+                break
+            end
 
             local part = body:sub(i, j-1)
             local k, v = part:match('^(.+)=(.+)$')
